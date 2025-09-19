@@ -72,14 +72,30 @@ export default function Auth() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 to-green-100 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col p-4 bg-gradient-to-br from-green-50 to-green-100 overflow-hidden">
       <FloatingLeaves />
-      <motion.div
-        className="relative z-10 w-full max-w-md bg-white bg-opacity-80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-green-200"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+      
+      {/* Back Button */}
+      <motion.button
+        className="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 bg-white text-green-700 rounded-xl shadow-md hover:bg-green-50 transition-colors duration-200"
+        onClick={() => navigate('/')}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        whileHover={{ scale: 1.05 }}
       >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Home
+      </motion.button>
+
+      <div className="flex-1 flex items-center justify-center">
+        <motion.div
+          className="relative z-10 w-full max-w-md bg-white bg-opacity-80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-green-200"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
         <h2 className="text-3xl font-extrabold text-green-800 mb-6 text-center">
           {isRegister ? "Create Account" : "Welcome Back"}
         </h2>
@@ -167,5 +183,6 @@ export default function Auth() {
         </p>
       </motion.div>
     </div>
-  );
+  </div>
+);
 }
