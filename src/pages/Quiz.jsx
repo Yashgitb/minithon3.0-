@@ -13,16 +13,15 @@ export default function Quiz() {
   const [userProfile, setUserProfile] = useState(null);
   const [quizAllowed, setQuizAllowed] = useState(true);
   const [message, setMessage] = useState("");
+  const [selectedAnswers, setSelectedAnswers] = useState({}); // Track selections per question
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("userProfile"));
-
-    if (!storedUser) {
-      navigate("/auth"); // if no user, go to login/register
+    const user = JSON.parse(localStorage.getItem("userProfile"));
+    if (!user) {
+      navigate("/auth");
       return;
     }
-
-    setUserProfile(storedUser);
+    setUserProfile(user);
 
     // Initialize category scores
     const categories = [...new Set(questions.map((q) => q.category))];
@@ -31,56 +30,61 @@ export default function Quiz() {
     setCategoryScores(initialScores);
 
     // Weekly restriction check
-    if (storedUser.quizzes && storedUser.quizzes.length > 0) {
-      const lastQuiz = storedUser.quizzes[storedUser.quizzes.length - 1];
+    if (user.quizzes && user.quizzes.length > 0) {
+      const lastQuiz = user.quizzes[user.quizzes.length - 1];
       const lastDate = new Date(lastQuiz.date);
       const now = new Date();
-      const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
-
+      const diffDays = (now - lastDate) / (1000 * 60 * 60 * 24);
       if (diffDays < 7) {
         setQuizAllowed(false);
-        const daysLeft = 7 - diffDays;
+        const daysLeft = Math.ceil(7 - diffDays);
         setMessage(`You can take the next quiz in ${daysLeft} day(s).`);
       }
     }
   }, [navigate]);
 
-  const handleSelect = (value, category) => {
-    const newScore = score + value;
-    const newCategoryScores = {
-      ...categoryScores,
-      [category]: (categoryScores[category] || 0) + value,
-    };
-
-    setScore(newScore);
-    setCategoryScores(newCategoryScores);
-
-    if (current + 1 < questions.length) {
-      setCurrent((prev) => prev + 1);
-    } else {
-      // Save quiz entry
-      const quizEntry = {
-        date: new Date().toISOString(),
-        score: newScore,
-        categoryScores: newCategoryScores,
-        creditsEarned: newScore,
-      };
-
-      const storedUser = JSON.parse(localStorage.getItem("userProfile")) || {};
-      const updatedProfile = {
-        ...storedUser,
-        credits: (storedUser.credits || 0) + newScore,
-        quizzes: [...(storedUser.quizzes || []), quizEntry],
-      };
-
-      localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
-      setUserProfile(updatedProfile);
-
-      navigate("/results");
-    }
+  const handleSelect = (value) => {
+    setSelectedAnswers({
+      ...selectedAnswers,
+      [current]: value,
+    });
   };
 
-  // If quiz not allowed due to weekly restriction
+  const handleNext = () => {
+    if (current < questions.length - 1) setCurrent((prev) => prev + 1);
+  };
+
+  const handlePrevious = () => {
+    if (current > 0) setCurrent((prev) => prev - 1);
+  };
+
+  const handleSubmit = () => {
+    let totalScore = 0;
+    const finalCategoryScores = {};
+
+    questions.forEach((q, index) => {
+      const value = selectedAnswers[index] ?? 0;
+      totalScore += value;
+      finalCategoryScores[q.category] = (finalCategoryScores[q.category] || 0) + value;
+    });
+
+    const quizEntry = {
+      date: new Date().toISOString(),
+      score: totalScore,
+      categoryScores: finalCategoryScores,
+      creditsEarned: totalScore,
+    };
+
+    const updatedProfile = {
+      ...userProfile,
+      credits: (userProfile.credits || 0) + totalScore,
+      quizzes: [...(userProfile.quizzes || []), quizEntry],
+    };
+
+    localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
+    navigate("/results");
+  };
+
   if (!quizAllowed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50 p-4">
@@ -103,13 +107,12 @@ export default function Quiz() {
         />
       </motion.div>
 
-      {/* Progress Text */}
       <p className="text-gray-700 mb-6 text-lg md:text-xl">
         Question {current + 1} of {questions.length}
       </p>
 
       {/* Animated Question Card */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence exitBeforeEnter>
         <motion.div
           key={current}
           initial={{ x: 300, opacity: 0 }}
@@ -121,12 +124,41 @@ export default function Quiz() {
             question={questions[current].question}
             options={questions[current].options.map((opt) => ({
               ...opt,
-              onSelect: () =>
-                handleSelect(opt.value, questions[current].category),
+              selected: selectedAnswers[current] === opt.value,
+              onSelect: () => handleSelect(opt.value),
             }))}
           />
         </motion.div>
       </AnimatePresence>
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-6 w-full max-w-2xl">
+        <button
+          onClick={handlePrevious}
+          disabled={current === 0}
+          className={`px-6 py-3 rounded-full shadow-md font-semibold text-white ${
+            current === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+          }`}
+        >
+          Previous
+        </button>
+
+        {current === questions.length - 1 ? (
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-3 rounded-full shadow-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600"
+          >
+            Submit Quiz
+          </button>
+        ) : (
+          <button
+            onClick={handleNext}
+            className="px-6 py-3 rounded-full shadow-md font-semibold text-white bg-green-600 hover:bg-green-700"
+          >
+            Next
+          </button>
+        )}
+      </div>
     </div>
   );
 }

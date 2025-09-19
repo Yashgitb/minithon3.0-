@@ -25,45 +25,45 @@ export default function Auth() {
       let users = JSON.parse(localStorage.getItem("users") || "[]");
 
       if (isRegister) {
-        // Registration flow
         if (users.find((u) => u.email === email)) {
           setError("Email already registered.");
           return;
         }
 
+        // Generate 12 dummy quizzes for a new user
+        const categories = ["Transport", "Diet", "Energy", "Waste", "Water"];
+        const dummyQuizzes = Array.from({ length: 12 }, (_, i) => {
+          const quizDate = new Date(Date.now() - i * 2 * 24 * 60 * 60 * 1000); // every 2 days
+          const details = categories.map(cat => ({
+            category: cat,
+            score: Math.floor(Math.random() * 10) + 1, // score 1-10
+          }));
+          const totalScore = details.reduce((sum, d) => sum + d.score, 0);
+          const creditsEarned = Math.floor(totalScore / 5); // simple formula for credits
+          return { date: quizDate, score: totalScore, creditsEarned, details };
+        });
+
         const newUser = {
           name,
           email,
           password,
-          credits: 0,
-          quizzes: [], // ensure quizzes array exists
+          quizzes: dummyQuizzes,
+          credits: dummyQuizzes.reduce((sum, q) => sum + q.creditsEarned, 0),
         };
 
         users.push(newUser);
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("userProfile", JSON.stringify(newUser));
-        navigate("/"); // go to landing page after register
+
+        navigate("/"); // redirect after registration
       } else {
-        // Login flow
-        const existingUser = users.find(
-          (u) => u.email === email && u.password === password
-        );
+        const existingUser = users.find((u) => u.email === email && u.password === password);
         if (!existingUser) {
           setError("Invalid credentials.");
           return;
         }
-
-        // Ensure structure is always complete
-        const fixedUser = {
-          name: existingUser.name || "Guest",
-          email: existingUser.email,
-          password: existingUser.password,
-          credits: existingUser.credits ?? 0,
-          quizzes: existingUser.quizzes ?? [],
-        };
-
-        localStorage.setItem("userProfile", JSON.stringify(fixedUser));
-        navigate("/"); // go to landing page after login
+        localStorage.setItem("userProfile", JSON.stringify(existingUser));
+        navigate("/"); // redirect after login
       }
     } catch (e) {
       console.error("Authentication error:", e);
@@ -83,8 +83,7 @@ export default function Auth() {
         <h2 className="text-3xl font-extrabold text-green-800 mb-6 text-center">
           {isRegister ? "Create Account" : "Welcome Back"}
         </h2>
-
-        {/* Error Message */}
+        
         <AnimatePresence mode="wait">
           {error && (
             <motion.p
@@ -99,7 +98,6 @@ export default function Auth() {
           )}
         </AnimatePresence>
 
-        {/* Auth Form */}
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <AnimatePresence mode="wait">
             {isRegister && (
@@ -118,14 +116,10 @@ export default function Auth() {
                   onChange={(e) => setName(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
                 />
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
-                  size={20}
-                />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" size={20} />
               </motion.div>
             )}
           </AnimatePresence>
-
           <div className="relative">
             <input
               type="email"
@@ -134,12 +128,8 @@ export default function Auth() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
             />
-            <Mail
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
-              size={20}
-            />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" size={20} />
           </div>
-
           <div className="relative">
             <input
               type="password"
@@ -148,10 +138,7 @@ export default function Auth() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
             />
-            <Lock
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
-              size={20}
-            />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" size={20} />
           </div>
 
           <motion.button
@@ -164,7 +151,6 @@ export default function Auth() {
           </motion.button>
         </form>
 
-        {/* Toggle Login/Register */}
         <p className="mt-6 text-center text-gray-700 text-sm">
           {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
           <motion.button
