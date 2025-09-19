@@ -3,90 +3,90 @@
     "question": "How do you usually commute?",
     "category": "Transport",
     "options": [
-      { "label": "Car (single passenger)", "value": 1 },
-      { "label": "Bus or Train", "value": 5 },
-      { "label": "Bicycle / Walk", "value": 10 }
+      { "label": "Car (single passenger)", "co2Saved": 0 },
+      { "label": "Bus or Train", "co2Saved": 400 },
+      { "label": "Bicycle / Walk", "co2Saved": 1000 }
     ]
   },
   {
     "question": "How often do you eat meat?",
     "category": "Diet",
     "options": [
-      { "label": "Daily", "value": 1 },
-      { "label": "Few times a week", "value": 5 },
-      { "label": "Rarely / Never", "value": 10 }
+      { "label": "Daily", "co2Saved": 0 },
+      { "label": "Few times a week", "co2Saved": 200 },
+      { "label": "Rarely / Never", "co2Saved": 800 }
     ]
   },
   {
     "question": "How do you manage energy at home?",
     "category": "Energy",
     "options": [
-      { "label": "Leave lights/appliances on", "value": 1 },
-      { "label": "Turn off when not in use", "value": 5 },
-      { "label": "Use solar or energy-efficient devices", "value": 10 }
+      { "label": "Leave lights/appliances on", "co2Saved": 0 },
+      { "label": "Turn off when not in use", "co2Saved": 100 },
+      { "label": "Use solar or energy-efficient devices", "co2Saved": 500 }
     ]
   },
   {
     "question": "How often do you use single-use plastic?",
     "category": "Habits",
     "options": [
-      { "label": "Daily", "value": 1 },
-      { "label": "Sometimes", "value": 5 },
-      { "label": "Rarely / Never", "value": 10 }
+      { "label": "Daily", "co2Saved": 0 },
+      { "label": "Sometimes", "co2Saved": 50 },
+      { "label": "Rarely / Never", "co2Saved": 200 }
     ]
   },
   {
     "question": "Do you recycle?",
     "category": "Habits",
     "options": [
-      { "label": "Never", "value": 1 },
-      { "label": "Sometimes", "value": 5 },
-      { "label": "Always", "value": 10 }
+      { "label": "Never", "co2Saved": 0 },
+      { "label": "Sometimes", "co2Saved": 50 },
+      { "label": "Always", "co2Saved": 150 }
     ]
   },
   {
     "question": "How much water do you use daily?",
     "category": "Habits",
     "options": [
-      { "label": "High (long showers, lots of wastage)", "value": 1 },
-      { "label": "Moderate (aware but occasional waste)", "value": 5 },
-      { "label": "Low (conscious usage, water-saving)", "value": 10 }
+      { "label": "High (long showers, lots of wastage)", "co2Saved": 0 },
+      { "label": "Moderate (aware but occasional waste)", "co2Saved": 50 },
+      { "label": "Low (conscious usage, water-saving)", "co2Saved": 150 }
     ]
   },
   {
     "question": "How often do you buy new clothes or fast fashion items?",
     "category": "Habits",
     "options": [
-      { "label": "Weekly", "value": 1 },
-      { "label": "Monthly", "value": 5 },
-      { "label": "Rarely / Second-hand", "value": 10 }
+      { "label": "Weekly", "co2Saved": 0 },
+      { "label": "Monthly", "co2Saved": 50 },
+      { "label": "Rarely / Second-hand", "co2Saved": 200 }
     ]
   },
   {
     "question": "How do you usually shop for groceries?",
     "category": "Transport",
     "options": [
-      { "label": "Drive car", "value": 1 },
-      { "label": "Public transport / walk", "value": 5 },
-      { "label": "Home delivery / Bicycle", "value": 10 }
+      { "label": "Drive car", "co2Saved": 0 },
+      { "label": "Public transport / walk", "co2Saved": 100 },
+      { "label": "Home delivery / Bicycle", "co2Saved": 300 }
     ]
   },
   {
     "question": "How often do you fly for travel or vacations?",
     "category": "Transport",
     "options": [
-      { "label": "Multiple times a year", "value": 1 },
-      { "label": "Once a year", "value": 5 },
-      { "label": "Rarely / Never", "value": 10 }
+      { "label": "Multiple times a year", "co2Saved": 0 },
+      { "label": "Once a year", "co2Saved": 500 },
+      { "label": "Rarely / Never", "co2Saved": 2000 }
     ]
   },
   {
     "question": "What type of energy powers your home?",
     "category": "Energy",
     "options": [
-      { "label": "Mostly fossil fuels (coal, gas, oil)", "value": 1 },
-      { "label": "Mixed / Grid electricity", "value": 5 },
-      { "label": "Renewable sources (solar, wind, hydro)", "value": 10 }
+      { "label": "Mostly fossil fuels (coal, gas, oil)", "co2Saved": 0 },
+      { "label": "Mixed / Grid electricity", "co2Saved": 100 },
+      { "label": "Renewable sources (solar, wind, hydro)", "co2Saved": 500 }
     ]
   }
 ]

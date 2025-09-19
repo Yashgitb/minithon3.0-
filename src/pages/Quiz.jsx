@@ -8,8 +8,6 @@ export default function Quiz() {
   const navigate = useNavigate();
 
   const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [categoryScores, setCategoryScores] = useState({});
   const [userProfile, setUserProfile] = useState(null);
   const [quizAllowed, setQuizAllowed] = useState(true);
   const [message, setMessage] = useState("");
@@ -22,12 +20,6 @@ export default function Quiz() {
       return;
     }
     setUserProfile(user);
-
-    // Initialize category scores
-    const categories = [...new Set(questions.map((q) => q.category))];
-    const initialScores = {};
-    categories.forEach((cat) => (initialScores[cat] = 0));
-    setCategoryScores(initialScores);
 
     // Weekly restriction check
     if (user.quizzes && user.quizzes.length > 0) {
@@ -43,10 +35,10 @@ export default function Quiz() {
     }
   }, [navigate]);
 
-  const handleSelect = (value) => {
+  const handleSelect = (option) => {
     setSelectedAnswers({
       ...selectedAnswers,
-      [current]: value,
+      [current]: option,
     });
   };
 
@@ -59,25 +51,31 @@ export default function Quiz() {
   };
 
   const handleSubmit = () => {
-    let totalScore = 0;
+    let totalCO2Saved = 0;
     const finalCategoryScores = {};
 
     questions.forEach((q, index) => {
-      const value = selectedAnswers[index] ?? 0;
-      totalScore += value;
-      finalCategoryScores[q.category] = (finalCategoryScores[q.category] || 0) + value;
+      const selectedOption = selectedAnswers[index];
+      const co2Saved = selectedOption?.co2Saved ?? 0;
+
+      totalCO2Saved += co2Saved;
+      finalCategoryScores[q.category] = (finalCategoryScores[q.category] || 0) + co2Saved;
     });
+
+    // Conversion factor: 1 credit per 100 kg CO₂ saved
+    const creditsEarned = Math.round(totalCO2Saved / 100);
 
     const quizEntry = {
       date: new Date().toISOString(),
-      score: totalScore,
+      totalCO2Saved,
+      score: creditsEarned,
       categoryScores: finalCategoryScores,
-      creditsEarned: totalScore,
+      creditsEarned,
     };
 
     const updatedProfile = {
       ...userProfile,
-      credits: (userProfile.credits || 0) + totalScore,
+      credits: (userProfile.credits || 0) + creditsEarned,
       quizzes: [...(userProfile.quizzes || []), quizEntry],
     };
 
@@ -124,8 +122,8 @@ export default function Quiz() {
             question={questions[current].question}
             options={questions[current].options.map((opt) => ({
               ...opt,
-              selected: selectedAnswers[current] === opt.value,
-              onSelect: () => handleSelect(opt.value),
+              selected: selectedAnswers[current]?.label === opt.label,
+              onSelect: () => handleSelect(opt),
             }))}
           />
         </motion.div>
