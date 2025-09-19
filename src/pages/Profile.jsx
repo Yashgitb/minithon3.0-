@@ -6,15 +6,24 @@ import "react-circular-progressbar/dist/styles.css";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState({
+    name: "Guest",
+    credits: 0,
+    quizzes: [],
+  });
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userProfile"));
-    if (!user) return navigate("/auth");
-    setUserProfile(user);
-  }, [navigate]);
+    if (!user) return navigate("/auth"); // redirect if not logged in
 
-  if (!userProfile) return null;
+    // Ensure user structure is complete
+    const normalizedUser = {
+      name: user.name || "Guest",
+      credits: user.credits ?? 0,
+      quizzes: user.quizzes ?? [],
+    };
+    setUserProfile(normalizedUser);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("userProfile");
@@ -47,7 +56,9 @@ export default function Profile() {
                 textSize: "20px",
               })}
             />
-            <p className="text-center mt-2 font-semibold text-green-700">Total Credits</p>
+            <p className="text-center mt-2 font-semibold text-green-700">
+              Total Credits
+            </p>
           </div>
 
           <div className="text-center md:text-left">
@@ -68,7 +79,9 @@ export default function Profile() {
 
         {/* Recent Quizzes */}
         <div className="bg-green-50 p-4 rounded-xl shadow-md mb-6">
-          <h3 className="text-xl font-semibold text-green-800 mb-2">Recent Quizzes</h3>
+          <h3 className="text-xl font-semibold text-green-800 mb-2">
+            Recent Quizzes
+          </h3>
           {userProfile.quizzes.length === 0 ? (
             <p className="text-gray-700">No quizzes taken yet.</p>
           ) : (
@@ -79,9 +92,12 @@ export default function Profile() {
                 .map((q, idx) => (
                   <li key={idx}>
                     <span className="font-semibold">
-                      {new Date(q.date).toLocaleDateString()}:
+                      {q.date
+                        ? new Date(q.date).toLocaleDateString()
+                        : "Unknown Date"}
+                      :
                     </span>{" "}
-                    Score: {q.score}, Credits Earned: {q.creditsEarned}
+                    Score: {q.score ?? 0}, Credits Earned: {q.creditsEarned ?? 0}
                   </li>
                 ))}
             </ul>

@@ -70,5 +70,23 @@
       { "label": "Public transport / walk", "value": 5 },
       { "label": "Home delivery / Bicycle", "value": 1 }
     ]
+  },
+  {
+    "question": "How often do you fly for travel or vacations?",
+    "category": "Transport",
+    "options": [
+      { "label": "Multiple times a year", "value": 10 },
+      { "label": "Once a year", "value": 5 },
+      { "label": "Rarely / Never", "value": 1 }
+    ]
+  },
+  {
+    "question": "What type of energy powers your home?",
+    "category": "Energy",
+    "options": [
+      { "label": "Mostly fossil fuels (coal, gas, oil)", "value": 10 },
+      { "label": "Mixed / Grid electricity", "value": 5 },
+      { "label": "Renewable sources (solar, wind, hydro)", "value": 1 }
+    ]
   }
 ]

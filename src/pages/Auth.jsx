@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { User, Mail, Lock } from "lucide-react";
+import FloatingLeaves from "../components/FloatingLeaves";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -12,116 +14,170 @@ export default function Auth() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password || (isRegister && !name)) {
-      setError("Please fill all fields");
+      setError("Please fill all fields.");
       return;
     }
 
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    try {
+      let users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    if (isRegister) {
-      // Check if email already exists
-      if (users.find((u) => u.email === email)) {
-        setError("Email already registered");
-        return;
+      if (isRegister) {
+        // Registration flow
+        if (users.find((u) => u.email === email)) {
+          setError("Email already registered.");
+          return;
+        }
+
+        const newUser = {
+          name,
+          email,
+          password,
+          credits: 0,
+          quizzes: [], // ensure quizzes array exists
+        };
+
+        users.push(newUser);
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("userProfile", JSON.stringify(newUser));
+        navigate("/"); // go to landing page after register
+      } else {
+        // Login flow
+        const existingUser = users.find(
+          (u) => u.email === email && u.password === password
+        );
+        if (!existingUser) {
+          setError("Invalid credentials.");
+          return;
+        }
+
+        // Ensure structure is always complete
+        const fixedUser = {
+          name: existingUser.name || "Guest",
+          email: existingUser.email,
+          password: existingUser.password,
+          credits: existingUser.credits ?? 0,
+          quizzes: existingUser.quizzes ?? [],
+        };
+
+        localStorage.setItem("userProfile", JSON.stringify(fixedUser));
+        navigate("/"); // go to landing page after login
       }
-
-      const newUser = {
-        name,
-        email,
-        password,
-        credits: 0,
-        quizzes: [],
-      };
-
-      users.push(newUser);
-
-      // Save updated users list
-      localStorage.setItem("users", JSON.stringify(users));
-      // Save logged-in profile
-      localStorage.setItem("userProfile", JSON.stringify(newUser));
-
-      // ✅ Redirect to Landing page
-      navigate("/");
-    } else {
-      // Login
-      const existingUser = users.find(
-        (u) => u.email === email && u.password === password
-      );
-
-      if (!existingUser) {
-        setError("Invalid credentials");
-        return;
-      }
-
-      // Save logged-in profile (fresh from users list)
-      localStorage.setItem("userProfile", JSON.stringify(existingUser));
-
-      // ✅ Redirect to Landing page
-      navigate("/");
+    } catch (e) {
+      console.error("Authentication error:", e);
+      setError("An unexpected error occurred. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+    <div className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 to-green-100 overflow-hidden">
+      <FloatingLeaves />
       <motion.div
-        className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg"
+        className="relative z-10 w-full max-w-md bg-white bg-opacity-80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-green-200"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-green-800">
-          {isRegister ? "Register" : "Login"}
+        <h2 className="text-3xl font-extrabold text-green-800 mb-6 text-center">
+          {isRegister ? "Create Account" : "Welcome Back"}
         </h2>
 
-        {error && <p className="text-red-500 mb-2">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          {isRegister && (
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="border p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+        {/* Error Message */}
+        <AnimatePresence mode="wait">
+          {error && (
+            <motion.p
+              key="error-message"
+              className="text-red-600 text-sm text-center mb-4"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              {error}
+            </motion.p>
           )}
+        </AnimatePresence>
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
+        {/* Auth Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <AnimatePresence mode="wait">
+            {isRegister && (
+              <motion.div
+                key="name-field"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
+                />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
+                  size={20}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
+          <div className="relative">
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <Mail
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
+              size={20}
+            />
+          </div>
 
-          <button
+          <div className="relative">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <Lock
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500"
+              size={20}
+            />
+          </div>
+
+          <motion.button
             type="submit"
-            className="bg-green-600 text-white py-2 rounded-full hover:bg-green-700"
+            className="w-full py-3 mt-2 bg-green-600 text-white font-bold rounded-full shadow-lg hover:bg-green-700 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             {isRegister ? "Register" : "Login"}
-          </button>
+          </motion.button>
         </form>
 
-        <p className="mt-4 text-center text-gray-700">
+        {/* Toggle Login/Register */}
+        <p className="mt-6 text-center text-gray-700 text-sm">
           {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-          <button
-            className="text-green-600 font-semibold"
+          <motion.button
+            className="text-green-600 font-semibold hover:underline"
             onClick={() => {
               setIsRegister(!isRegister);
               setError("");
             }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isRegister ? "Login" : "Register"}
-          </button>
+            {isRegister ? "Login here" : "Register now"}
+          </motion.button>
         </p>
       </motion.div>
     </div>

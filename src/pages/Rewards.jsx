@@ -4,68 +4,99 @@ import { motion } from "framer-motion";
 
 export default function Rewards() {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState({
+    credits: 0,
+    quizzes: [],
+    name: "Guest",
+  });
 
+  // Load user profile from localStorage or create default
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userProfile"));
-    if (!user) return navigate("/auth");
-    setUserProfile(user);
-  }, [navigate]);
+    let storedUser = JSON.parse(localStorage.getItem("userProfile"));
 
-  if (!userProfile) return null;
+    if (!storedUser) {
+      storedUser = {
+        name: "Guest",
+        credits: 25,
+        quizzes: [],
+      };
+      localStorage.setItem("userProfile", JSON.stringify(storedUser));
+    } else {
+      // Ensure structure is always complete
+      storedUser = {
+        name: storedUser.name || "Guest",
+        credits: storedUser.credits ?? 0,
+        quizzes: storedUser.quizzes ?? [],
+      };
+      localStorage.setItem("userProfile", JSON.stringify(storedUser));
+    }
 
-  // Example reward milestones
-  const rewardMilestones = [
-    { credits: 10, reward: "🌱 Eco Starter Badge" },
-    { credits: 25, reward: "🌍 Green Contributor Badge" },
-    { credits: 50, reward: "🌟 Certificate of Eco Excellence" },
-    { credits: 100, reward: "🏆 Eco Master Trophy" },
+    setUserProfile(storedUser);
+  }, []);
+
+  // Rewards based on credits
+  const rewards = [
+    { name: "Eco Beginner", minCredits: 10, icon: "🌱" },
+    { name: "Eco Advocate", minCredits: 30, icon: "🌍" },
+    { name: "Eco Champion", minCredits: 50, icon: "🌟" },
   ];
 
-  return (
-    <div className="min-h-screen flex flex-col items-center bg-green-50 p-4">
-      <motion.div
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-3xl mt-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-3xl font-bold text-green-800 mb-6 text-center">
-          {userProfile.name}'s Rewards
-        </h2>
+  const earnedRewards = rewards.filter(
+    (r) => userProfile.credits >= r.minCredits
+  );
 
-        <p className="text-gray-700 mb-6 text-center">
-          Total Credits: <span className="font-semibold">{userProfile.credits}</span>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex flex-col items-center p-6">
+      <motion.div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <h1 className="text-4xl md:text-5xl font-extrabold text-green-800 text-center mb-8 drop-shadow-sm">
+          {userProfile.name}'s Rewards
+        </h1>
+
+        {/* Credits */}
+        <p className="text-center text-gray-700 text-lg md:text-xl mb-8">
+          Total Credits Earned:{" "}
+          <span className="font-bold text-green-900 text-2xl">
+            {userProfile.credits}
+          </span>
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {rewardMilestones.map((milestone, idx) => (
-            <motion.div
-              key={idx}
-              className={`p-4 rounded-xl shadow-md text-center ${
-                userProfile.credits >= milestone.credits
-                  ? "bg-green-100 border-2 border-green-600"
-                  : "bg-gray-100 border border-gray-300"
-              }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.2 }}
-            >
-              <p className="font-semibold text-green-800">{milestone.reward}</p>
-              <p className="text-gray-700 mt-1">
-                Requires {milestone.credits} Credits
-              </p>
-              {userProfile.credits >= milestone.credits && (
-                <p className="mt-2 text-yellow-500 font-bold">Unlocked ✅</p>
-              )}
-            </motion.div>
-          ))}
-        </div>
+        {/* Rewards Section */}
+        {earnedRewards.length === 0 ? (
+          <p className="text-center text-gray-500 mb-6 italic">
+            No rewards earned yet. Take more quizzes to unlock badges!
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {earnedRewards.map((reward, idx) => (
+              <motion.div
+                key={reward.name}
+                className="bg-green-100 rounded-2xl shadow-lg p-8 flex flex-col items-center justify-center text-center transform hover:scale-105 transition-transform duration-300"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: idx * 0.2 }}
+              >
+                <span className="text-6xl mb-4">{reward.icon}</span>
+                <h3 className="text-2xl font-semibold text-green-800">
+                  {reward.name}
+                </h3>
+                <p className="text-gray-700 mt-2 text-base">
+                  Earned at {reward.minCredits} credits
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
+        {/* Back Button */}
         <div className="flex justify-center mt-6">
           <button
             onClick={() => navigate("/profile")}
-            className="px-6 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full shadow-md transform hover:scale-105 transition-transform duration-300"
           >
             Back to Profile
           </button>
