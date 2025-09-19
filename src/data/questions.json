@@ -1,42 +1,74 @@
 [
   {
     "question": "How do you usually commute?",
+    "category": "Transport",
     "options": [
-      { "label": "Car", "value": 10 },
-      { "label": "Bus/Train", "value": 5 },
-      { "label": "Bicycle/Walk", "value": 1 }
+      { "label": "Car (single passenger)", "value": 10 },
+      { "label": "Bus or Train", "value": 5 },
+      { "label": "Bicycle / Walk", "value": 1 }
     ]
   },
   {
     "question": "How often do you eat meat?",
+    "category": "Diet",
     "options": [
       { "label": "Daily", "value": 10 },
       { "label": "Few times a week", "value": 5 },
-      { "label": "Rarely/Never", "value": 1 }
+      { "label": "Rarely / Never", "value": 1 }
     ]
   },
   {
     "question": "How do you manage energy at home?",
+    "category": "Energy",
     "options": [
       { "label": "Leave lights/appliances on", "value": 10 },
       { "label": "Turn off when not in use", "value": 5 },
-      { "label": "Use solar/efficient devices", "value": 1 }
+      { "label": "Use solar or energy-efficient devices", "value": 1 }
     ]
   },
   {
     "question": "How often do you use single-use plastic?",
+    "category": "Habits",
     "options": [
       { "label": "Daily", "value": 10 },
       { "label": "Sometimes", "value": 5 },
-      { "label": "Rarely/Never", "value": 1 }
+      { "label": "Rarely / Never", "value": 1 }
     ]
   },
   {
     "question": "Do you recycle?",
+    "category": "Habits",
     "options": [
       { "label": "Never", "value": 10 },
       { "label": "Sometimes", "value": 5 },
       { "label": "Always", "value": 1 }
+    ]
+  },
+  {
+    "question": "How much water do you use daily?",
+    "category": "Habits",
+    "options": [
+      { "label": "High (long showers, lots of wastage)", "value": 10 },
+      { "label": "Moderate (aware but occasional waste)", "value": 5 },
+      { "label": "Low (conscious usage, water-saving)", "value": 1 }
+    ]
+  },
+  {
+    "question": "How often do you buy new clothes or fast fashion items?",
+    "category": "Habits",
+    "options": [
+      { "label": "Weekly", "value": 10 },
+      { "label": "Monthly", "value": 5 },
+      { "label": "Rarely / Second-hand", "value": 1 }
+    ]
+  },
+  {
+    "question": "How do you usually shop for groceries?",
+    "category": "Transport",
+    "options": [
+      { "label": "Drive car", "value": 10 },
+      { "label": "Public transport / walk", "value": 5 },
+      { "label": "Home delivery / Bicycle", "value": 1 }
     ]
   }
 ]
