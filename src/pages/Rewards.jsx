@@ -3,6 +3,7 @@
 // import { motion } from "framer-motion";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
+// import BadgeList from "../components/BadgeList"; // Corrected import path
 
 // export default function Rewards() {
 //   const navigate = useNavigate();
@@ -51,7 +52,6 @@
 //   const handleDownloadCertificate = async () => {
 //     if (!topReward) return;
 
-//     // Create a temporary HTML element for certificate
 //     const certificateElement = document.createElement("div");
 //     certificateElement.style.width = "800px";
 //     certificateElement.style.height = "600px";
@@ -76,7 +76,6 @@
 //     `;
 //     document.body.appendChild(certificateElement);
 
-//     // Use html2canvas to render
 //     const canvas = await html2canvas(certificateElement, { scale: 2 });
 //     const imgData = canvas.toDataURL("image/png");
 //     const pdf = new jsPDF({
@@ -93,7 +92,6 @@
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
 //       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-//         {/* Page Header */}
 //         <motion.div
 //           className="text-center mb-12"
 //           initial={{ opacity: 0, y: -20 }}
@@ -112,49 +110,11 @@
 //           </div>
 //         </motion.div>
 
-//         {/* Rewards Grid */}
-//         <div className="mb-16">
-//           {earnedRewards.length === 0 ? (
-//             <motion.div
-//               className="text-center bg-white rounded-2xl shadow-lg p-10"
-//               initial={{ opacity: 0 }}
-//               animate={{ opacity: 1 }}
-//             >
-//               <p className="text-xl text-gray-600">
-//                 No rewards earned yet. Take more quizzes to unlock badges!
-//               </p>
-//             </motion.div>
-//           ) : (
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-//               {earnedRewards.map((reward, idx) => (
-//                 <motion.div
-//                   key={reward.name}
-//                   className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center justify-center text-center hover:shadow-xl transition-shadow duration-300"
-//                   initial={{ y: 50, opacity: 0 }}
-//                   animate={{ y: 0, opacity: 1 }}
-//                   transition={{ delay: idx * 0.1 }}
-//                   whileHover={{ y: -5 }}
-//                 >
-//                   <span className="text-7xl mb-4">{reward.icon}</span>
-//                   <h3 className="text-2xl font-bold text-green-800 mb-3">
-//                     {reward.name}
-//                   </h3>
-//                   <p className="text-gray-600 mb-3">
-//                     Earned at {reward.minCredits} credits
-//                   </p>
-//                   <div className="bg-blue-50 rounded-xl px-4 py-2">
-//                     <p className="text-blue-600 font-semibold text-lg">
-//                       ${reward.money} Reward
-//                     </p>
-//                   </div>
-//                 </motion.div>
-//               ))}
-//             </div>
-//           )}
-//         </div>
+//         {/* Display all badges using the BadgeList component */}
+//         <BadgeList userCredits={userProfile.credits} />
 
 //         {/* Action Buttons */}
-//         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+//         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16">
 //           {topReward && (
 //             <motion.button
 //               onClick={handleDownloadCertificate}
@@ -188,7 +148,7 @@
 // import { motion } from "framer-motion";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
-// import BadgeList from "../components/BadgeList";     // Import the BadgeList component
+// import BadgeList from "../components/BadgeList";
 
 // export default function Rewards() {
 //   const navigate = useNavigate();
@@ -275,10 +235,39 @@
 //   };
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
-//       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+//     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 relative">
+//       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+//         {/* Top-left button */}
+//         <div className="absolute top-4 left-4">
+//           <motion.button
+//             onClick={() => navigate("/")}
+//             className="px-8 py-4 bg-gray-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+//             whileHover={{ scale: 1.05 }}
+//             whileTap={{ scale: 0.95 }}
+//           >
+//             <span>←</span>
+//             Back to Home
+//           </motion.button>
+//         </div>
+
+//         {/* Top-right button */}
+//         {topReward && (
+//           <div className="absolute top-4 right-4">
+//             <motion.button
+//               onClick={handleDownloadCertificate}
+//               className="px-8 py-4 bg-blue-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+//               whileHover={{ scale: 1.05 }}
+//               whileTap={{ scale: 0.95 }}
+//             >
+//               <span role="img" aria-label="certificate">📜</span>
+//               Download Recent Badge Certificate
+//             </motion.button>
+//           </div>
+//         )}
+
+//         {/* Page Header */}
 //         <motion.div
-//           className="text-center mb-12"
+//           className="text-center mt-24 mb-12"
 //           initial={{ opacity: 0, y: -20 }}
 //           animate={{ opacity: 1, y: 0 }}
 //         >
@@ -295,37 +284,23 @@
 //           </div>
 //         </motion.div>
 
-//         {/* This is the new section */}
+//         {/* Display all badges using the BadgeList component */}
 //         <BadgeList userCredits={userProfile.credits} />
 
-//         {/* Action Buttons */}
-//         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16">
-//           {topReward && (
-//             <motion.button
-//               onClick={handleDownloadCertificate}
-//               className="px-8 py-4 bg-blue-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-//               whileHover={{ scale: 1.05 }}
-//               whileTap={{ scale: 0.95 }}
-//             >
-//               <span role="img" aria-label="certificate">📜</span>
-//               Download Certificate
-//             </motion.button>
-//           )}
-
-//           <motion.button
-//             onClick={() => navigate("/")}
-//             className="px-8 py-4 bg-gray-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-//             whileHover={{ scale: 1.05 }}
-//             whileTap={{ scale: 0.95 }}
-//           >
-//             <span>←</span>
-//             Back to Home
-//           </motion.button>
-//         </div>
+//         {/* New message at the bottom */}
+//         <motion.p
+//           className="text-center mt-12 text-2xl font-bold text-green-700"
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ delay: 0.5 }}
+//         >
+//           Solve more quizzes for more badges!
+//         </motion.p>
 //       </div>
 //     </div>
 //   );
 // }
+
 
 
 import { useEffect, useState } from "react";
@@ -333,7 +308,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import BadgeList from "../components/BadgeList"; // Corrected import path
+import BadgeList from "../components/BadgeList";
 
 export default function Rewards() {
   const navigate = useNavigate();
@@ -420,10 +395,39 @@ export default function Rewards() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 relative">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+        {/* Top-left button */}
+        <div className="absolute top-8 left-8">
+          <motion.button
+            onClick={() => navigate("/")}
+            className="px-6 py-3 bg-gray-600 text-white text-md font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span>←</span>
+            Back to Home
+          </motion.button>
+        </div>
+
+        {/* Top-right button */}
+        {topReward && (
+          <div className="absolute top-8 right-8">
+            <motion.button
+              onClick={handleDownloadCertificate}
+              className="px-6 py-3 bg-blue-600 text-white text-md font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span role="img" aria-label="certificate">📜</span>
+              Download  Recent Badge
+            </motion.button>
+          </div>
+        )}
+
+        {/* Page Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mt-24 mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -443,29 +447,14 @@ export default function Rewards() {
         {/* Display all badges using the BadgeList component */}
         <BadgeList userCredits={userProfile.credits} />
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16">
-          {topReward && (
-            <motion.button
-              onClick={handleDownloadCertificate}
-              className="px-8 py-4 bg-blue-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span role="img" aria-label="certificate">📜</span>
-              Download Certificate
-            </motion.button>
-          )}
-
-          <motion.button
-            onClick={() => navigate("/")}
-            className="px-8 py-4 bg-gray-600 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span>←</span>
-            Back to Home
-          </motion.button>
+        {/* New message section */}
+        <div className="mt-16 text-center">
+          <p className="text-5xl font-bold text-blue-500 mb-5">
+            Solve more quizzes for more badges!
+          </p>
+          <p className="text-lg text-teal-600">
+            Each quiz you complete brings you closer to new rewards and helps you learn more about protecting our planet.
+          </p>
         </div>
       </div>
     </div>
