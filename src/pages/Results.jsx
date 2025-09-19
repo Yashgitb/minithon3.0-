@@ -43,31 +43,35 @@ export default function Results() {
   }
 
   const { score, categoryScores, creditsEarned } = latestQuiz;
+  const maxScore = questions.length * 10;
 
+  // Gauge color: higher score = greener
   const getGaugeColor = () => {
-    if (score <= 10) return "#16a34a"; // green
-    if (score <= 25) return "#eab308"; // yellow
+    if (score >= maxScore * 0.8) return "#16a34a"; // green
+    if (score >= maxScore * 0.4) return "#eab308"; // yellow
     return "#dc2626"; // red
   };
 
   const impactCategory =
-    score <= 10 ? "Low Impact 🌱" : score <= 25 ? "Medium Impact 🌍" : "High Impact 🔴";
+    score >= maxScore * 0.8
+      ? "Low Impact 🌱"
+      : score >= maxScore * 0.4
+      ? "Medium Impact 🌍"
+      : "High Impact 🔴";
 
   const impactMessage =
-    score <= 10
+    score >= maxScore * 0.8
       ? "Amazing! Keep it up, you are eco-conscious already!"
-      : score <= 25
+      : score >= maxScore * 0.4
       ? "Good start! Small changes can make a big difference."
       : "Time to improve! Let’s adopt more eco-friendly habits.";
 
-  // Handle retake quiz (respecting 7-day rule)
   const handleRetake = () => {
     if (userProfile?.quizzes?.length > 0) {
       const lastQuiz = userProfile.quizzes[userProfile.quizzes.length - 1];
       const lastDate = new Date(lastQuiz.date);
       const now = new Date();
       const diffDays = (now - lastDate) / (1000 * 60 * 60 * 24);
-
       if (diffDays < 7) {
         const daysLeft = Math.ceil(7 - diffDays);
         alert(`You can take the next quiz in ${daysLeft} day(s).`);
@@ -77,7 +81,6 @@ export default function Results() {
     navigate("/quiz");
   };
 
-  // Go back to landing page
   const handleGoHome = () => {
     navigate("/");
   };
@@ -98,8 +101,8 @@ export default function Results() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-green-50 py-10 px-4 md:px-0">
-      {/* Confetti for low or high impact */}
-      {(score <= 10 || score >= 30) && <Confetti width={width} height={height} recycle={false} />}
+      {/* Confetti for high achievement or low impact */}
+      {score >= maxScore * 0.8 && <Confetti width={width} height={height} recycle={false} />}
 
       {/* Title */}
       <motion.h1
@@ -120,7 +123,7 @@ export default function Results() {
       >
         <CircularProgressbar
           value={score}
-          maxValue={questions.length * 10}
+          maxValue={maxScore}
           text={`${score}`}
           styles={buildStyles({
             pathColor: getGaugeColor(),
@@ -150,7 +153,9 @@ export default function Results() {
       {/* Weekly Quiz Trend */}
       {trendData.length > 0 && (
         <div className="w-full max-w-3xl mt-10 bg-white p-4 rounded-2xl shadow-lg">
-          <h3 className="text-xl font-semibold mb-2 text-green-800 text-center">Recent Quiz Trend</h3>
+          <h3 className="text-xl font-semibold mb-2 text-green-800 text-center">
+            Recent Quiz Trend
+          </h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -180,9 +185,9 @@ export default function Results() {
           >
             <p className="font-semibold text-green-800">{category}</p>
             <p className="text-gray-700">
-              {value <= 3
+              {value >= 8
                 ? "Excellent! Keep your habits sustainable."
-                : value <= 7
+                : value >= 5
                 ? "Good, but can improve!"
                 : "Needs attention! Consider adopting eco-friendly alternatives."}
             </p>

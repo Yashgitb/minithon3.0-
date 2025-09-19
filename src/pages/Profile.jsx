@@ -13,6 +13,7 @@ import {
   Line,
   CartesianGrid,
   Legend,
+  Cell,
 } from "recharts";
 import "react-circular-progressbar/dist/styles.css";
 
@@ -74,11 +75,18 @@ export default function Profile() {
     return obj;
   });
 
-  // Assign colors to each category
+  // Assign colors to each category for line chart
   const categoryColors = {};
   Object.keys(categoryScores).forEach((cat) => {
     categoryColors[cat] = randomColor();
   });
+
+  // Function to determine bar color based on score
+  const getBarColor = (score) => {
+    if (score >= 8) return "#16a34a"; // green = high
+    if (score >= 4) return "#eab308"; // yellow = medium
+    return "#dc2626"; // red = low
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-green-50 p-4">
@@ -139,7 +147,11 @@ export default function Profile() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="score" fill="#16a34a" />
+              <Bar dataKey="score">
+                {barData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(entry.score)} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

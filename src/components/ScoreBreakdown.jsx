@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 
 export default function ScoreBreakdown({ breakdown }) {
-  // Function to get color based on value
+  // Function to get color based on value (higher = greener)
   const getColor = (value) => {
-    if (value <= 3) return "#16a34a"; // green
-    if (value <= 7) return "#eab308"; // yellow
-    return "#dc2626"; // red
+    if (value >= 8) return "#16a34a"; // green (good eco-score)
+    if (value >= 4) return "#eab308"; // yellow (medium)
+    return "#dc2626"; // red (needs improvement)
   };
 
   return (
@@ -26,16 +26,14 @@ export default function ScoreBreakdown({ breakdown }) {
             <motion.div
               className="h-5 rounded-full"
               initial={{ width: 0 }}
-              animate={{ width: `${item.value * 10}%` }} // scale for better visualization
+              animate={{ width: `${item.value * 10}%` }} // scale for visualization
               transition={{ duration: 1, delay: i * 0.3 }}
               style={{ backgroundColor: getColor(item.value) }}
             />
           </div>
 
           {/* Value Display */}
-          <p className="text-sm text-gray-600 mt-1">
-            Score: {item.value}
-          </p>
+          <p className="text-sm text-gray-600 mt-1">Score: {item.value}</p>
         </motion.div>
       ))}
     </div>
