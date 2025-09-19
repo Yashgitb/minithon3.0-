@@ -1,0 +1,42 @@
+[
+  {
+    "question": "How do you usually commute?",
+    "options": [
+      { "label": "Car", "value": 10 },
+      { "label": "Bus/Train", "value": 5 },
+      { "label": "Bicycle/Walk", "value": 1 }
+    ]
+  },
+  {
+    "question": "How often do you eat meat?",
+    "options": [
+      { "label": "Daily", "value": 10 },
+      { "label": "Few times a week", "value": 5 },
+      { "label": "Rarely/Never", "value": 1 }
+    ]
+  },
+  {
+    "question": "How do you manage energy at home?",
+    "options": [
+      { "label": "Leave lights/appliances on", "value": 10 },
+      { "label": "Turn off when not in use", "value": 5 },
+      { "label": "Use solar/efficient devices", "value": 1 }
+    ]
+  },
+  {
+    "question": "How often do you use single-use plastic?",
+    "options": [
+      { "label": "Daily", "value": 10 },
+      { "label": "Sometimes", "value": 5 },
+      { "label": "Rarely/Never", "value": 1 }
+    ]
+  },
+  {
+    "question": "Do you recycle?",
+    "options": [
+      { "label": "Never", "value": 10 },
+      { "label": "Sometimes", "value": 5 },
+      { "label": "Always", "value": 1 }
+    ]
+  }
+]
