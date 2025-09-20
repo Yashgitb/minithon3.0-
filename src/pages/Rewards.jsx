@@ -1,5 +1,4 @@
 
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -93,48 +92,47 @@ export default function Rewards() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 relative">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
-        {/* Top-left button */}
-        <div className="absolute top-8 left-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 relative">
+        {/* Top buttons */}
+        <div className="flex justify-between items-center mb-6 sm:mb-8">
           <motion.button
             onClick={() => navigate("/")}
-            className="px-6 py-3 bg-gray-600 text-white text-md font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+            className="px-3 sm:px-6 py-2 sm:py-3 bg-gray-600 text-white text-sm sm:text-md font-medium rounded-xl shadow-lg hover:bg-gray-700 transition-colors flex items-center gap-1 sm:gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <span>←</span>
-            Back to Home
+            <span className="hidden sm:inline">Back to Home</span>
+            <span className="sm:hidden">Back</span>
           </motion.button>
-        </div>
 
-        {/* Top-right button */}
-        {topReward && (
-          <div className="absolute top-8 right-8">
+          {topReward && (
             <motion.button
               onClick={handleDownloadCertificate}
-              className="px-6 py-3 bg-blue-600 text-white text-md font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="px-3 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white text-sm sm:text-md font-medium rounded-xl shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-1 sm:gap-2"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <span role="img" aria-label="certificate">📜</span>
-              Download  Recent Badge
+              <span className="hidden sm:inline">Download Recent Badge</span>
+              <span className="sm:hidden">Download</span>
             </motion.button>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Page Header */}
         <motion.div
-          className="text-center mt-24 mb-12"
+          className="text-center mt-4 sm:mt-8 mb-6 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-5xl md:text-6xl font-extrabold text-green-800 mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-green-800 mb-3 sm:mb-4">
             {userProfile.name}'s Rewards
           </h1>
-          <div className="inline-block bg-white rounded-2xl shadow-lg px-8 py-4">
-            <p className="text-xl text-gray-700">
+          <div className="inline-block bg-white rounded-2xl shadow-lg px-4 sm:px-8 py-3 sm:py-4">
+            <p className="text-base sm:text-lg md:text-xl text-gray-700">
               Total Credits Earned:{" "}
-              <span className="text-3xl font-bold text-blue-600 ml-2">
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 ml-1 sm:ml-2">
                 {userProfile.credits}
               </span>
             </p>
@@ -145,11 +143,11 @@ export default function Rewards() {
         <BadgeList userCredits={userProfile.credits} />
 
         {/* New message section */}
-        <div className="mt-16 text-center">
-          <p className="text-5xl font-bold text-blue-500 mb-5">
-            Solve more quizzes for more badges!
+        <div className="mt-8 sm:mt-12 lg:mt-16 text-center px-4">
+          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-500 mb-3 sm:mb-5">
+            Be more eco-friendly for more badges!
           </p>
-          <p className="text-lg text-teal-600">
+          <p className="text-base sm:text-lg text-teal-600 max-w-2xl mx-auto">
             Each quiz you complete brings you closer to new rewards and helps you learn more about protecting our planet.
           </p>
         </div>

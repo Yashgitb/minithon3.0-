@@ -1,16 +1,27 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Lock } from "lucide-react";
 import FloatingLeaves from "../components/FloatingLeaves";
 
 export default function Auth() {
   const navigate = useNavigate();
-  const [isRegister, setIsRegister] = useState(false);
+  const location = useLocation(); // Hook to get location object
+
+  // Check for the URL parameter to determine initial state
+  const [isRegister, setIsRegister] = useState(location.search.includes("isRegister=true"));
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  // Update state if URL parameter changes (e.g., if user navigates back to /auth from /auth?isRegister=true)
+  useEffect(() => {
+    setIsRegister(location.search.includes("isRegister=true"));
+  }, [location.search]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

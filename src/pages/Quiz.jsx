@@ -94,18 +94,18 @@ export default function Quiz() {
   const progress = ((current + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-green-50 py-10 px-4 md:px-0">
+    <div className="min-h-screen flex flex-col items-center justify-start bg-green-50 py-6 sm:py-10 px-4">
       {/* Progress Bar */}
-      <motion.div className="w-full max-w-2xl h-4 bg-green-200 rounded-full mb-4 overflow-hidden">
+      <motion.div className="w-full max-w-2xl h-3 sm:h-4 bg-green-200 rounded-full mb-3 sm:mb-4 overflow-hidden">
         <motion.div
-          className="h-4 bg-green-600 rounded-full"
+          className="h-3 sm:h-4 bg-green-600 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}
         />
       </motion.div>
 
-      <p className="text-gray-700 mb-6 text-lg md:text-xl">
+      <p className="text-gray-700 mb-4 sm:mb-6 text-base sm:text-lg md:text-xl">
         Question {current + 1} of {questions.length}
       </p>
 
@@ -130,30 +130,33 @@ export default function Quiz() {
       </AnimatePresence>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6 w-full max-w-2xl">
+      <div className="flex justify-between mt-4 sm:mt-6 w-full max-w-2xl gap-2 sm:gap-4">
         <button
           onClick={handlePrevious}
           disabled={current === 0}
-          className={`px-6 py-3 rounded-full shadow-md font-semibold text-white ${
+          className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md font-semibold text-white text-sm sm:text-base ${
             current === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
           }`}
         >
-          Previous
+          <span className="hidden sm:inline">Previous</span>
+          <span className="sm:hidden">←</span>
         </button>
 
         {current === questions.length - 1 ? (
           <button
             onClick={handleSubmit}
-            className="px-6 py-3 rounded-full shadow-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600"
+            className="px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600 text-sm sm:text-base"
           >
-            Submit Quiz
+            <span className="hidden sm:inline">Submit Quiz</span>
+            <span className="sm:hidden">Submit</span>
           </button>
         ) : (
           <button
             onClick={handleNext}
-            className="px-6 py-3 rounded-full shadow-md font-semibold text-white bg-green-600 hover:bg-green-700"
+            className="px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md font-semibold text-white bg-green-600 hover:bg-green-700 text-sm sm:text-base"
           >
-            Next
+            <span className="hidden sm:inline">Next</span>
+            <span className="sm:hidden">→</span>
           </button>
         )}
       </div>

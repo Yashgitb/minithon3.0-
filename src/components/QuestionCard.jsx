@@ -19,16 +19,16 @@ export default function QuestionCard({ question, options, onSelect }) {
 
   return (
     <motion.div
-      className="bg-white shadow-2xl rounded-3xl p-6 w-full max-w-lg relative overflow-hidden"
+      className="bg-white shadow-2xl rounded-3xl p-4 sm:p-6 w-full max-w-lg relative overflow-hidden mx-2 sm:mx-0"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
       {/* Question */}
-      <h2 className="text-2xl font-bold text-green-800 mb-6">{question}</h2>
+      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-green-800 mb-4 sm:mb-6">{question}</h2>
 
       {/* Options */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {options.map((opt, i) => (
           <motion.button
             key={i}
@@ -38,7 +38,7 @@ export default function QuestionCard({ question, options, onSelect }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className={`w-full px-5 py-4 rounded-2xl flex items-center justify-between font-medium shadow-md transition-colors duration-300
+            className={`w-full px-3 sm:px-5 py-3 sm:py-4 rounded-2xl flex items-center justify-between font-medium shadow-md transition-colors duration-300 text-sm sm:text-base
               ${
                 selected === opt.label
                   ? "bg-green-400 text-white shadow-lg border-2 border-green-600"
@@ -47,7 +47,7 @@ export default function QuestionCard({ question, options, onSelect }) {
           >
             <div className="flex items-center">
               {getIcon(opt.value)}
-              <span>{opt.label}</span>
+              <span className="ml-2">{opt.label}</span>
             </div>
             <span
               className={`font-semibold ${
